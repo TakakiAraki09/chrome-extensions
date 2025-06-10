@@ -1,0 +1,136 @@
+body {
+  margin: 0;
+  padding: 0;
+  width: 500px;
+  max-height: 600px;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
+#app {
+  padding: 20px;
+}
+
+h1 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.date-controls {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.date-controls label {
+  display: block;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.date-controls select,
+.date-controls input {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+#customDateInputs {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+#customDateInputs label {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#historyList {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.summary {
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.history-item {
+  background-color: white;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s;
+}
+
+.history-item:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.history-item h3 {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: #333;
+  font-weight: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-item .url {
+  font-size: 12px;
+  color: #0066cc;
+  margin: 0 0 8px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-item .metadata {
+  font-size: 11px;
+  color: #999;
+  margin: 0;
+}
+
+.history-item .metadata span {
+  margin-right: 15px;
+}
+
+.error {
+  color: #d32f2f;
+  padding: 10px;
+  background-color: #ffebee;
+  border-radius: 4px;
+}
