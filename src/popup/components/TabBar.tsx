@@ -26,11 +26,13 @@ const tabs: Array<{
 
 export const TabBar: React.FC<TabBarProps> = ({ activeTab, onTabChange }) => {
 	return (
-		<div className="tab-controls">
+		<div className="tab-controls" role="tablist">
 			{tabs.map((tab) => (
 				<button
 					type="button"
 					key={tab.id}
+					role="tab"
+					aria-selected={activeTab === tab.id}
 					className={activeTab === tab.id ? "active" : ""}
 					onClick={() => onTabChange(tab.id)}
 				>

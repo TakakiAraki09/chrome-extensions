@@ -172,8 +172,9 @@ describe("メッセージング", () => {
 		it("無効なレスポンス形式に対してエラーをスローする", async () => {
 			const invalidResponse = {
 				tab: {
-					// Missing required fields
-					id: "invalid_id_type",
+					// Missing required fields and wrong types
+					id: "invalid_id_type", // should be number
+					// Missing: index, windowId, active, highlighted, pinned, selected, discarded, autoDiscardable, incognito
 				},
 			};
 

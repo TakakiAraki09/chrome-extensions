@@ -65,7 +65,7 @@ describe("TabBar コンポーネント", () => {
 	it("正しいtypeでボタンをレンダリングする", () => {
 		render(<TabBar activeTab="interests" onTabChange={mockOnTabChange} />);
 
-		const buttons = screen.getAllByRole("button");
+		const buttons = screen.getAllByRole("tab");
 
 		for (const button of buttons) {
 			expect(button).toHaveAttribute("type", "button");

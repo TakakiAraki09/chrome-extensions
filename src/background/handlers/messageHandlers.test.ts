@@ -135,7 +135,7 @@ describe("メッセージハンドラー", () => {
 					text: "",
 					startTime: expect.any(Number),
 					endTime: expect.any(Number),
-					maxResults: 100,
+					maxResults: 2000,
 				});
 				expect(result).toEqual({
 					history: mockHistory,
@@ -451,6 +451,73 @@ describe("メッセージハンドラー", () => {
 				scores: [],
 				error: "Handler error",
 			});
+		});
+
+		it("文字列エラーを処理する", async () => {
+			mockDBManager.getInterestScores = vi
+				.fn()
+				.mockRejectedValue("String error");
+
+			const request: MessageRequest = {
+				action: "getInterestScores",
+			};
+
+			const result = handleMessage(handlers, request, mockSendResponse);
+
+			expect(result).toBe(true);
+			// Wait for async processing
+			await new Promise((resolve) => setTimeout(resolve, 0));
+			expect(mockSendResponse).toHaveBeenCalledWith({
+				scores: [],
+				error: "String error",
+			});
+		});
+
+		it("未知のエラーを処理する", async () => {
+			mockDBManager.getInterestScores = vi
+				.fn()
+				.mockRejectedValue({ unknown: "error" });
+
+			const request: MessageRequest = {
+				action: "getInterestScores",
+			};
+
+			const result = handleMessage(handlers, request, mockSendResponse);
+
+			expect(result).toBe(true);
+			// Wait for async processing
+			await new Promise((resolve) => setTimeout(resolve, 0));
+			expect(mockSendResponse).toHaveBeenCalledWith({
+				scores: [],
+				error: "Unknown error occurred",
+			});
+		});
+
+		it("エラーログを適切に出力する", async () => {
+			const consoleErrorSpy = vi
+				.spyOn(console, "error")
+				.mockImplementation(() => {});
+
+			mockDBManager.getInterestScores = vi
+				.fn()
+				.mockRejectedValue(new Error("Handler error"));
+
+			const request: MessageRequest = {
+				action: "getInterestScores",
+			};
+
+			const result = handleMessage(handlers, request, mockSendResponse);
+
+			expect(result).toBe(true);
+			// Wait for async processing
+			await new Promise((resolve) => setTimeout(resolve, 0));
+
+			expect(consoleErrorSpy).toHaveBeenCalledWith(
+				"Failed to get interest scores:",
+				expect.any(Error),
+			);
+
+			consoleErrorSpy.mockRestore();
 		});
 	});
 });
