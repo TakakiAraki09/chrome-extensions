@@ -31,7 +31,9 @@ export const handleMessage = (
 	const parseResult = RequestSchema.safeParse(request);
 	if (!parseResult.success) {
 		console.error("Invalid request format:", parseResult.error);
-		sendResponse({ error: "Invalid request format" });
+		sendResponse({
+			error: "Invalid request format",
+		});
 		return true;
 	}
 
@@ -81,7 +83,9 @@ export const handleMessage = (
 		} catch (error) {
 			const action = validatedRequest.action || "unknown";
 			console.error(`Error handling ${action}:`, error);
-			sendResponse({ error: getErrorMessage(error) });
+			sendResponse({
+				error: getErrorMessage(error),
+			});
 		}
 	};
 

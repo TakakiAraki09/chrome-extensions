@@ -4,7 +4,12 @@ import { defineConfig } from "vite";
 import manifest from "./manifest.json";
 
 export default defineConfig({
-	plugins: [react(), crx({ manifest })],
+	plugins: [
+		react(),
+		crx({
+			manifest,
+		}),
+	],
 	build: {
 		rollupOptions: {
 			input: {

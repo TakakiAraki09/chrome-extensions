@@ -5,8 +5,8 @@ import type {
 	GetInterestScoresRequest,
 	GetTabInfoRequest,
 	SaveBrowsingActivityRequest,
-} from "../messages";
-import { sendMessage } from "../messages";
+} from "./messages";
+import { sendMessage } from "./messages";
 
 // Mock chrome.runtime.sendMessage
 const mockSendMessage = vi.fn();
@@ -18,13 +18,13 @@ global.chrome = {
 	},
 };
 
-describe("messages", () => {
+describe("メッセージング", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 	});
 
 	describe("sendMessage", () => {
-		it("should send getTabInfo message and validate response", async () => {
+		it("getTabInfoメッセージを送信してレスポンスを検証する", async () => {
 			const mockResponse = {
 				tab: {
 					id: 1,
@@ -44,14 +44,16 @@ describe("messages", () => {
 
 			mockSendMessage.mockResolvedValue(mockResponse);
 
-			const message: GetTabInfoRequest = { action: "getTabInfo" };
+			const message: GetTabInfoRequest = {
+				action: "getTabInfo",
+			};
 			const result = await sendMessage(message);
 
 			expect(mockSendMessage).toHaveBeenCalledWith(message);
 			expect(result).toEqual(mockResponse);
 		});
 
-		it("should send getHistory message and validate response", async () => {
+		it("getHistoryメッセージを送信してレスポンスを検証する", async () => {
 			const mockResponse = {
 				history: [
 					{
@@ -79,7 +81,7 @@ describe("messages", () => {
 			expect(result).toEqual(mockResponse);
 		});
 
-		it("should send saveBrowsingActivity message and validate response", async () => {
+		it("saveBrowsingActivityメッセージを送信してレスポンスを検証する", async () => {
 			const mockResponse = {
 				success: true,
 				id: 123,
@@ -107,7 +109,7 @@ describe("messages", () => {
 			expect(result).toEqual(mockResponse);
 		});
 
-		it("should send getBrowsingData message and validate response", async () => {
+		it("getBrowsingDataメッセージを送信してレスポンスを検証する", async () => {
 			const mockResponse = {
 				activities: [
 					{
@@ -139,7 +141,7 @@ describe("messages", () => {
 			expect(result).toEqual(mockResponse);
 		});
 
-		it("should send getInterestScores message and validate response", async () => {
+		it("getInterestScoresメッセージを送信してレスポンスを検証する", async () => {
 			const mockResponse = {
 				scores: [
 					{
@@ -167,7 +169,7 @@ describe("messages", () => {
 			expect(result).toEqual(mockResponse);
 		});
 
-		it("should throw error for invalid response format", async () => {
+		it("無効なレスポンス形式に対してエラーをスローする", async () => {
 			const invalidResponse = {
 				tab: {
 					// Missing required fields
@@ -177,14 +179,16 @@ describe("messages", () => {
 
 			mockSendMessage.mockResolvedValue(invalidResponse);
 
-			const message: GetTabInfoRequest = { action: "getTabInfo" };
+			const message: GetTabInfoRequest = {
+				action: "getTabInfo",
+			};
 
 			await expect(sendMessage(message)).rejects.toThrow(
 				"Invalid response format for getTabInfo",
 			);
 		});
 
-		it("should handle response with error field", async () => {
+		it("エラーフィールドを持つレスポンスを処理する", async () => {
 			const errorResponse = {
 				activities: [],
 				error: "Database connection failed",

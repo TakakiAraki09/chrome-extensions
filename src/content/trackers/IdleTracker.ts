@@ -35,7 +35,9 @@ export function createIdleTracker(
 
 	const attachEventListeners = () => {
 		for (const event of events) {
-			document.addEventListener(event, handleActivity, { passive: true });
+			document.addEventListener(event, handleActivity, {
+				passive: true,
+			});
 		}
 	};
 

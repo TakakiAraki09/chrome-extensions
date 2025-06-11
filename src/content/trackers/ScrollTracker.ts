@@ -51,13 +51,21 @@ export function createScrollTracker(
 	};
 
 	const attachEventListeners = () => {
-		window.addEventListener("scroll", handleScroll, { passive: true });
-		document.addEventListener("wheel", onUpdate, { passive: true });
-		document.addEventListener("touchmove", onUpdate, { passive: true });
+		window.addEventListener("scroll", handleScroll, {
+			passive: true,
+		});
+		document.addEventListener("wheel", onUpdate, {
+			passive: true,
+		});
+		document.addEventListener("touchmove", onUpdate, {
+			passive: true,
+		});
 	};
 
 	const getMetrics = (): ScrollMetrics => {
-		return { ...metrics };
+		return {
+			...metrics,
+		};
 	};
 
 	const destroy = () => {

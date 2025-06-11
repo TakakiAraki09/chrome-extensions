@@ -50,7 +50,10 @@ export function createNavigationHandler(
 
 	const init = () => {
 		setupEventListeners();
-		observer.observe(document, { childList: true, subtree: true });
+		observer.observe(document, {
+			childList: true,
+			subtree: true,
+		});
 	};
 
 	const destroy = () => {

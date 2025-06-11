@@ -1,17 +1,17 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { sendMessage } from "../../../shared/messages";
-import type { TimeRange, ViewMode } from "../../types";
-import { useBrowsingData } from "../useBrowsingData";
+import { sendMessage } from "../../shared/messages";
+import type { TimeRange, ViewMode } from "../types";
+import { useBrowsingData } from "./useBrowsingData";
 
 // Mock sendMessage
-vi.mock("../../../shared/messages", () => ({
+vi.mock("../../shared/messages", () => ({
 	sendMessage: vi.fn(),
 }));
 
 const mockSendMessage = vi.mocked(sendMessage);
 
-describe("useBrowsingData", () => {
+describe("useBrowsingData フック", () => {
 	const mockTimeRange: TimeRange = {
 		startTime: Date.now() - 86400000, // 24 hours ago
 		endTime: Date.now(),
@@ -21,7 +21,7 @@ describe("useBrowsingData", () => {
 		vi.clearAllMocks();
 	});
 
-	it("should fetch interest scores when viewMode is 'interests'", async () => {
+	it("viewModeが'interests'のとき興味スコアを取得する", async () => {
 		const mockInterestScores = [
 			{
 				domain: "example.com",
@@ -55,7 +55,7 @@ describe("useBrowsingData", () => {
 		expect(result.current.historyItems).toEqual([]);
 	});
 
-	it("should fetch browsing activities when viewMode is 'activities'", async () => {
+	it("viewModeが'activities'のときブラウジングアクティビティを取得する", async () => {
 		const mockActivities = [
 			{
 				url: "https://example.com",
@@ -93,7 +93,7 @@ describe("useBrowsingData", () => {
 		expect(result.current.historyItems).toEqual([]);
 	});
 
-	it("should fetch history items when viewMode is 'history'", async () => {
+	it("viewModeが'history'のとき履歴アイテムを取得する", async () => {
 		const mockHistory = [
 			{
 				id: "1",
@@ -128,7 +128,7 @@ describe("useBrowsingData", () => {
 		expect(result.current.browsingActivities).toEqual([]);
 	});
 
-	it("should handle loading state correctly", async () => {
+	it("ローディング状態を正しく処理する", async () => {
 		mockSendMessage.mockImplementation(() => new Promise(() => {})); // Never resolves
 
 		const { result } = renderHook(() =>
@@ -138,7 +138,7 @@ describe("useBrowsingData", () => {
 		expect(result.current.isLoading).toBe(true);
 	});
 
-	it("should handle errors gracefully", async () => {
+	it("エラーを適切に処理する", async () => {
 		const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 		mockSendMessage.mockRejectedValue(new Error("Network error"));
 
@@ -159,12 +159,19 @@ describe("useBrowsingData", () => {
 		consoleSpy.mockRestore();
 	});
 
-	it("should refetch data when timeRange changes", async () => {
-		mockSendMessage.mockResolvedValue({ scores: [] });
+	it("timeRangeが変更されたときデータを再取得する", async () => {
+		mockSendMessage.mockResolvedValue({
+			scores: [],
+		});
 
 		const { result, rerender } = renderHook(
-			({ viewMode, timeRange }: { viewMode: ViewMode; timeRange: TimeRange }) =>
-				useBrowsingData(viewMode, timeRange),
+			({
+				viewMode,
+				timeRange,
+			}: {
+				viewMode: ViewMode;
+				timeRange: TimeRange;
+			}) => useBrowsingData(viewMode, timeRange),
 			{
 				initialProps: {
 					viewMode: "interests" as ViewMode,
@@ -195,8 +202,10 @@ describe("useBrowsingData", () => {
 		});
 	});
 
-	it("should provide refresh function that refetches data", async () => {
-		mockSendMessage.mockResolvedValue({ scores: [] });
+	it("データを再取得するrefresh関数を提供する", async () => {
+		mockSendMessage.mockResolvedValue({
+			scores: [],
+		});
 
 		const { result } = renderHook(() =>
 			useBrowsingData("interests", mockTimeRange),
@@ -218,7 +227,7 @@ describe("useBrowsingData", () => {
 		});
 	});
 
-	it("should handle empty response data", async () => {
+	it("空のレスポンスデータを処理する", async () => {
 		mockSendMessage.mockResolvedValue({});
 
 		const { result } = renderHook(() =>

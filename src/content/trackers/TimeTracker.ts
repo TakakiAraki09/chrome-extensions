@@ -64,7 +64,9 @@ export function createTimeTracker(): TimeTrackerInstance {
 	};
 
 	const getMetrics = (): TimeMetrics => {
-		return { ...metrics };
+		return {
+			...metrics,
+		};
 	};
 
 	return {

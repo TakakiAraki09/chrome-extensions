@@ -15,7 +15,12 @@ function calculateMetrics(activities: BrowsingActivity[]) {
 		}, 0) / activities.length;
 	const frequency = activities.length;
 
-	return { totalTime, avgScrollDepth, avgEngagement, frequency };
+	return {
+		totalTime,
+		avgScrollDepth,
+		avgEngagement,
+		frequency,
+	};
 }
 
 function normalizeWeights(metrics: ReturnType<typeof calculateMetrics>) {
@@ -52,7 +57,11 @@ export function getInterestFactors(
 	activities: BrowsingActivity[],
 ): InterestScore["factors"] {
 	if (activities.length === 0) {
-		return { timeWeight: 0, scrollWeight: 0, engagementWeight: 0 };
+		return {
+			timeWeight: 0,
+			scrollWeight: 0,
+			engagementWeight: 0,
+		};
 	}
 
 	const metrics = calculateMetrics(activities);

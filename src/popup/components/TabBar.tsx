@@ -6,10 +6,22 @@ interface TabBarProps {
 	onTabChange: (tab: ViewMode) => void;
 }
 
-const tabs: Array<{ id: ViewMode; label: string }> = [
-	{ id: "interests", label: "興味関心度" },
-	{ id: "activities", label: "活動履歴" },
-	{ id: "history", label: "履歴" },
+const tabs: Array<{
+	id: ViewMode;
+	label: string;
+}> = [
+	{
+		id: "interests",
+		label: "興味関心度",
+	},
+	{
+		id: "activities",
+		label: "活動履歴",
+	},
+	{
+		id: "history",
+		label: "履歴",
+	},
 ];
 
 export const TabBar: React.FC<TabBarProps> = ({ activeTab, onTabChange }) => {

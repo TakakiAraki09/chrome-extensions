@@ -125,7 +125,9 @@ function createTrackerManager(): TrackerManagerInstance {
 	};
 
 	const handleMessage = (
-		request: { action: string },
+		request: {
+			action: string;
+		},
 		sender: chrome.runtime.MessageSender,
 		sendResponse: (response?: unknown) => void,
 	) => {

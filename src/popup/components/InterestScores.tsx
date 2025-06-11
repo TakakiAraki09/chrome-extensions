@@ -22,7 +22,9 @@ const ScoreFactor: React.FC<ScoreFactorProps> = ({
 		<div className="progress-bar">
 			<div
 				className={`progress-fill ${className}`}
-				style={{ width: `${weight * 100}%` }}
+				style={{
+					width: `${weight * 100}%`,
+				}}
 			/>
 		</div>
 		<span>{Math.round(weight * 100)}%</span>

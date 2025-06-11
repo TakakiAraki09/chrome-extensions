@@ -1,17 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
-import type { ViewMode } from "../../types";
-import { TabBar } from "../TabBar";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { TabBar } from "./TabBar";
 
-describe("TabBar", () => {
+describe("TabBar コンポーネント", () => {
 	const mockOnTabChange = vi.fn();
 
 	beforeEach(() => {
 		vi.clearAllMocks();
 	});
 
-	it("should render all tabs", () => {
+	it("すべてのタブを表示する", () => {
 		render(<TabBar activeTab="interests" onTabChange={mockOnTabChange} />);
 
 		expect(screen.getByText("興味関心度")).toBeInTheDocument();
@@ -19,7 +18,7 @@ describe("TabBar", () => {
 		expect(screen.getByText("履歴")).toBeInTheDocument();
 	});
 
-	it("should highlight the active tab", () => {
+	it("アクティブなタブをハイライトする", () => {
 		render(<TabBar activeTab="activities" onTabChange={mockOnTabChange} />);
 
 		const interestsTab = screen.getByText("興味関心度");
@@ -31,7 +30,7 @@ describe("TabBar", () => {
 		expect(historyTab).not.toHaveClass("active");
 	});
 
-	it("should call onTabChange when a tab is clicked", async () => {
+	it("タブがクリックされたときonTabChangeを呼び出す", async () => {
 		const user = userEvent.setup();
 		render(<TabBar activeTab="interests" onTabChange={mockOnTabChange} />);
 
@@ -41,7 +40,7 @@ describe("TabBar", () => {
 		expect(mockOnTabChange).toHaveBeenCalledWith("activities");
 	});
 
-	it("should call onTabChange with correct values for all tabs", async () => {
+	it("すべてのタブで正しい値でonTabChangeを呼び出す", async () => {
 		const user = userEvent.setup();
 		render(<TabBar activeTab="interests" onTabChange={mockOnTabChange} />);
 
@@ -63,7 +62,7 @@ describe("TabBar", () => {
 		expect(mockOnTabChange).toHaveBeenCalledTimes(3);
 	});
 
-	it("should render buttons with correct type", () => {
+	it("正しいtypeでボタンをレンダリングする", () => {
 		render(<TabBar activeTab="interests" onTabChange={mockOnTabChange} />);
 
 		const buttons = screen.getAllByRole("button");
@@ -73,7 +72,7 @@ describe("TabBar", () => {
 		}
 	});
 
-	it("should have correct CSS class for container", () => {
+	it("コンテナに正しいCSSクラスを持つ", () => {
 		const { container } = render(
 			<TabBar activeTab="interests" onTabChange={mockOnTabChange} />,
 		);

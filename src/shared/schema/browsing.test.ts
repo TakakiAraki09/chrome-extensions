@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { BrowserSchema } from "../browsing";
+import { BrowserSchema } from "./browsing";
 
-describe("BrowserSchema", () => {
+describe("ブラウザスキーマ", () => {
 	describe("BrowsingActivitySchema", () => {
-		it("should validate a valid browsing activity", () => {
+		it("有効なブラウジングアクティビティを検証する", () => {
 			const validActivity = {
 				url: "https://example.com",
 				title: "Example Site",
@@ -21,7 +21,7 @@ describe("BrowserSchema", () => {
 			expect(result.success).toBe(true);
 		});
 
-		it("should reject invalid browsing activity", () => {
+		it("無効なブラウジングアクティビティを拒否する", () => {
 			const invalidActivity = {
 				url: "",
 				title: "Example Site",
@@ -34,7 +34,7 @@ describe("BrowserSchema", () => {
 			expect(result.success).toBe(false);
 		});
 
-		it("should allow optional endTime", () => {
+		it("オプショナルのendTimeを許可する", () => {
 			const activityWithEndTime = {
 				url: "https://example.com",
 				title: "Example Site",
@@ -55,7 +55,7 @@ describe("BrowserSchema", () => {
 	});
 
 	describe("HistorySchema", () => {
-		it("should validate a valid history request", () => {
+		it("有効な履歴リクエストを検証する", () => {
 			const validHistory = {
 				type: "History" as const,
 				startTime: Date.now() - 86400000,
@@ -67,7 +67,7 @@ describe("BrowserSchema", () => {
 			expect(result.success).toBe(true);
 		});
 
-		it("should validate minimal history request", () => {
+		it("最小限の履歴リクエストを検証する", () => {
 			const minimalHistory = {
 				type: "History" as const,
 			};
@@ -78,7 +78,7 @@ describe("BrowserSchema", () => {
 	});
 
 	describe("BrowsingSchema", () => {
-		it("should validate a valid browsing request", () => {
+		it("有効なブラウジングリクエストを検証する", () => {
 			const validBrowsing = {
 				type: "Browsing" as const,
 				domain: "example.com",
@@ -93,7 +93,7 @@ describe("BrowserSchema", () => {
 	});
 
 	describe("InterestSchema", () => {
-		it("should validate a valid interest score", () => {
+		it("有効な興味スコアを検証する", () => {
 			const validInterest = {
 				type: "Interest" as const,
 				domain: "example.com",
@@ -111,7 +111,7 @@ describe("BrowserSchema", () => {
 			expect(result.success).toBe(true);
 		});
 
-		it("should allow optional url", () => {
+		it("オプショナルのurlを許可する", () => {
 			const interestWithoutUrl = {
 				type: "Interest" as const,
 				domain: "example.com",

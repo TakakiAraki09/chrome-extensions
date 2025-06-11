@@ -12,10 +12,22 @@ interface DateRangeSelectorProps {
 }
 
 const dateRangeOptions = [
-	{ value: "1", label: "Last 24 hours" },
-	{ value: "7", label: "Last 7 days" },
-	{ value: "30", label: "Last 30 days" },
-	{ value: "custom", label: "Custom" },
+	{
+		value: "1",
+		label: "Last 24 hours",
+	},
+	{
+		value: "7",
+		label: "Last 7 days",
+	},
+	{
+		value: "30",
+		label: "Last 30 days",
+	},
+	{
+		value: "custom",
+		label: "Custom",
+	},
 ];
 
 export const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({

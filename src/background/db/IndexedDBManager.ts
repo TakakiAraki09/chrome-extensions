@@ -2,8 +2,12 @@ import Dexie, { type Table } from "dexie";
 import type { BrowsingActivity, InterestScore } from "../types";
 
 export interface DatabaseSchema {
-	browsingActivities: BrowsingActivity & { id?: number };
-	interestScores: InterestScore & { id?: number };
+	browsingActivities: BrowsingActivity & {
+		id?: number;
+	};
+	interestScores: InterestScore & {
+		id?: number;
+	};
 }
 
 export interface QueryOptions {
@@ -14,8 +18,16 @@ export interface QueryOptions {
 }
 
 class BrowsingTrackerDB extends Dexie {
-	browsingActivities!: Table<BrowsingActivity & { id?: number }>;
-	interestScores!: Table<InterestScore & { id?: number }>;
+	browsingActivities!: Table<
+		BrowsingActivity & {
+			id?: number;
+		}
+	>;
+	interestScores!: Table<
+		InterestScore & {
+			id?: number;
+		}
+	>;
 
 	constructor() {
 		super("BrowsingTracker");
@@ -56,7 +68,10 @@ export function createIndexedDBManager(): IndexedDBManagerInstance {
 			.first();
 
 		if (existing) {
-			await db.interestScores.put({ ...score, id: existing.id });
+			await db.interestScores.put({
+				...score,
+				id: existing.id,
+			});
 		} else {
 			await db.interestScores.add(score);
 		}

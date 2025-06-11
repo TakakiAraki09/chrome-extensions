@@ -219,7 +219,9 @@ const ResponseSchemas = {
 export async function sendMessage<T extends MessageRequest>(
 	message: T,
 ): Promise<
-	T extends { action: infer A }
+	T extends {
+		action: infer A;
+	}
 		? A extends keyof MessageTypeMap
 			? MessageTypeMap[A]["response"]
 			: never
@@ -235,7 +237,9 @@ export async function sendMessage<T extends MessageRequest>(
 		throw new Error(`Invalid response format for ${message.action}`);
 	}
 
-	return result.data as T extends { action: infer A }
+	return result.data as T extends {
+		action: infer A;
+	}
 		? A extends keyof MessageTypeMap
 			? MessageTypeMap[A]["response"]
 			: never

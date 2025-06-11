@@ -32,8 +32,13 @@ export const createMessageHandlers = (dbManager: IndexedDBManagerInstance) => ({
 	getTabInfo: async (
 		_request: GetTabInfoRequest,
 	): Promise<GetTabInfoResponse> => {
-		const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-		return { tab: tabs[0] };
+		const tabs = await chrome.tabs.query({
+			active: true,
+			currentWindow: true,
+		});
+		return {
+			tab: tabs[0],
+		};
 	},
 
 	getHistory: async (
@@ -52,7 +57,9 @@ export const createMessageHandlers = (dbManager: IndexedDBManagerInstance) => ({
 			return (b.lastVisitTime || 0) - (a.lastVisitTime || 0);
 		});
 
-		return { history: sortedHistory };
+		return {
+			history: sortedHistory,
+		};
 	},
 
 	saveBrowsingActivity: async (
@@ -82,10 +89,16 @@ export const createMessageHandlers = (dbManager: IndexedDBManagerInstance) => ({
 			console.log(
 				`Interest score updated for ${activity.domain}: ${interestScore}`,
 			);
-			return { success: true, id };
+			return {
+				success: true,
+				id,
+			};
 		} catch (error) {
 			console.error("Failed to save activity:", error);
-			return { success: false, error: getErrorMessage(error) };
+			return {
+				success: false,
+				error: getErrorMessage(error),
+			};
 		}
 	},
 
@@ -101,10 +114,15 @@ export const createMessageHandlers = (dbManager: IndexedDBManagerInstance) => ({
 				endTime,
 				limit,
 			});
-			return { activities };
+			return {
+				activities,
+			};
 		} catch (error) {
 			console.error("Failed to get browsing data:", error);
-			return { activities: [], error: getErrorMessage(error) };
+			return {
+				activities: [],
+				error: getErrorMessage(error),
+			};
 		}
 	},
 
@@ -113,10 +131,15 @@ export const createMessageHandlers = (dbManager: IndexedDBManagerInstance) => ({
 	): Promise<GetInterestScoresResponse> => {
 		try {
 			const scores = await dbManager.getInterestScores();
-			return { scores };
+			return {
+				scores,
+			};
 		} catch (error) {
 			console.error("Failed to get interest scores:", error);
-			return { scores: [], error: getErrorMessage(error) };
+			return {
+				scores: [],
+				error: getErrorMessage(error),
+			};
 		}
 	},
 });

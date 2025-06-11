@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { unreachable } from "../utils";
+import { unreachable } from "./utils";
 
-describe("utils", () => {
+describe("ユーティリティ", () => {
 	describe("unreachable", () => {
-		it("should throw an error with the provided message", () => {
+		it("指定されたメッセージでエラーをスローする", () => {
 			const message = "This should never happen";
 
 			expect(() => {

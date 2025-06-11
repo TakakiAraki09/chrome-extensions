@@ -1,15 +1,15 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Loading } from "../Loading";
+import { Loading } from "./Loading";
 
-describe("Loading", () => {
-	it("should render loading text", () => {
+describe("Loading コンポーネント", () => {
+	it("ローディングテキストを表示する", () => {
 		render(<Loading />);
 
 		expect(screen.getByText("Loading...")).toBeInTheDocument();
 	});
 
-	it("should have correct CSS class", () => {
+	it("正しいCSSクラスを持つ", () => {
 		render(<Loading />);
 
 		const loadingElement = screen.getByText("Loading...");
