@@ -6,7 +6,7 @@
 		"module": "ESNext",
 		"rootDir": "./src",
 		"moduleResolution": "node",
-		"types": ["chrome"],
+		"types": ["chrome", "vitest/globals"],
 		"allowJs": false,
 		"jsx": "react-jsx",
 		"resolveJsonModule": true,

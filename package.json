@@ -5,12 +5,16 @@
 	"main": "index.js",
 	"scripts": {
 		"tsc": "tsc --noEmit",
+		"typecheck": "tsc --noEmit",
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
 		"lint": "biome check",
 		"lint:fix": "biome check --write",
-		"format": "biome format --write"
+		"format": "biome format --write",
+		"test": "vitest",
+		"test:ui": "vitest --ui",
+		"test:run": "vitest run"
 	},
 	"keywords": [],
 	"author": "",
@@ -19,12 +23,19 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@crxjs/vite-plugin": "^2.0.0",
+		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/react": "^16.3.0",
+		"@testing-library/user-event": "^14.6.1",
 		"@types/chrome": "^0.0.326",
+		"@types/node": "^24.0.0",
 		"@types/react": "^19.1.7",
 		"@types/react-dom": "^19.1.6",
 		"@vitejs/plugin-react": "^4.5.2",
+		"@vitest/ui": "^3.2.3",
+		"jsdom": "^26.1.0",
 		"typescript": "^5.8.3",
-		"vite": "^6.3.5"
+		"vite": "^6.3.5",
+		"vitest": "^3.2.3"
 	},
 	"dependencies": {
 		"dayjs": "^1.11.13",
