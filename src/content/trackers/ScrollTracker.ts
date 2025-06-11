@@ -1,69 +1,76 @@
-import { ScrollMetrics } from '../types'
+import type { ScrollMetrics } from "../types";
 
-export class ScrollTracker {
-  private metrics: ScrollMetrics = {
-    depth: 0,
-    maxDepth: 0,
-    totalDistance: 0
-  }
-  private lastScrollY = window.scrollY
-  private onUpdateCallback: () => void
+export interface ScrollTrackerInstance {
+	getMetrics: () => ScrollMetrics;
+	destroy: () => void;
+}
 
-  constructor(onUpdate: () => void) {
-    this.onUpdateCallback = onUpdate
-    this.init()
-  }
+export function createScrollTracker(
+	onUpdate: () => void,
+): ScrollTrackerInstance {
+	const metrics: ScrollMetrics = {
+		depth: 0,
+		maxDepth: 0,
+		totalDistance: 0,
+	};
+	let lastScrollY = window.scrollY;
 
-  private init() {
-    this.attachEventListeners()
-    this.calculateInitialDepth()
-  }
+	const calculateScrollDepth = (): number => {
+		const windowHeight = window.innerHeight;
+		const documentHeight = Math.max(
+			document.body.scrollHeight,
+			document.body.offsetHeight,
+			document.documentElement.clientHeight,
+			document.documentElement.scrollHeight,
+			document.documentElement.offsetHeight,
+		);
 
-  private attachEventListeners() {
-    window.addEventListener('scroll', this.handleScroll, { passive: true })
-    document.addEventListener('wheel', this.onUpdateCallback, { passive: true })
-    document.addEventListener('touchmove', this.onUpdateCallback, { passive: true })
-  }
+		return Math.min(
+			100,
+			Math.round(((window.scrollY + windowHeight) / documentHeight) * 100),
+		);
+	};
 
-  private handleScroll = () => {
-    const currentScrollY = window.scrollY
-    const scrollDistance = Math.abs(currentScrollY - this.lastScrollY)
-    
-    this.metrics.totalDistance += scrollDistance
-    
-    const scrollDepth = this.calculateScrollDepth()
-    this.metrics.depth = scrollDepth
-    this.metrics.maxDepth = Math.max(this.metrics.maxDepth, scrollDepth)
-    
-    this.onUpdateCallback()
-    this.lastScrollY = currentScrollY
-  }
+	const calculateInitialDepth = () => {
+		metrics.depth = calculateScrollDepth();
+		metrics.maxDepth = metrics.depth;
+	};
 
-  private calculateScrollDepth(): number {
-    const windowHeight = window.innerHeight
-    const documentHeight = Math.max(
-      document.body.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.clientHeight,
-      document.documentElement.scrollHeight,
-      document.documentElement.offsetHeight
-    )
-    
-    return Math.min(100, Math.round((window.scrollY + windowHeight) / documentHeight * 100))
-  }
+	const handleScroll = () => {
+		const currentScrollY = window.scrollY;
+		const scrollDistance = Math.abs(currentScrollY - lastScrollY);
 
-  private calculateInitialDepth() {
-    this.metrics.depth = this.calculateScrollDepth()
-    this.metrics.maxDepth = this.metrics.depth
-  }
+		metrics.totalDistance += scrollDistance;
 
-  getMetrics(): ScrollMetrics {
-    return { ...this.metrics }
-  }
+		const scrollDepth = calculateScrollDepth();
+		metrics.depth = scrollDepth;
+		metrics.maxDepth = Math.max(metrics.maxDepth, scrollDepth);
 
-  destroy() {
-    window.removeEventListener('scroll', this.handleScroll)
-    document.removeEventListener('wheel', this.onUpdateCallback)
-    document.removeEventListener('touchmove', this.onUpdateCallback)
-  }
+		onUpdate();
+		lastScrollY = currentScrollY;
+	};
+
+	const attachEventListeners = () => {
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		document.addEventListener("wheel", onUpdate, { passive: true });
+		document.addEventListener("touchmove", onUpdate, { passive: true });
+	};
+
+	const getMetrics = (): ScrollMetrics => {
+		return { ...metrics };
+	};
+
+	const destroy = () => {
+		window.removeEventListener("scroll", handleScroll);
+		document.removeEventListener("wheel", onUpdate);
+		document.removeEventListener("touchmove", onUpdate);
+	};
+
+	attachEventListeners();
+	calculateInitialDepth();
+
+	return {
+		getMetrics,
+		destroy,
+	};
 }

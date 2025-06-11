@@ -1,64 +1,78 @@
-import { TimeMetrics } from '../types'
+import type { TimeMetrics } from "../types";
 
-export class TimeTracker {
-  private metrics: TimeMetrics
-  private isActive = true
-  private isVisible = true
+export interface TimeTrackerInstance {
+	updateVisibility: (visible: boolean) => void;
+	markActive: () => void;
+	markIdle: () => void;
+	updateActivity: () => void;
+	finalize: () => void;
+	getMetrics: () => TimeMetrics;
+}
 
-  constructor() {
-    const now = Date.now()
-    this.metrics = {
-      startTime: now,
-      focusTime: 0,
-      idleTime: 0,
-      lastActivity: now
-    }
-  }
+export function createTimeTracker(): TimeTrackerInstance {
+	const now = Date.now();
+	const metrics: TimeMetrics = {
+		startTime: now,
+		focusTime: 0,
+		idleTime: 0,
+		lastActivity: now,
+	};
+	let isActive = true;
+	let isVisible = true;
 
-  updateVisibility(visible: boolean) {
-    const now = Date.now()
-    
-    if (!visible && this.isVisible && this.isActive) {
-      this.metrics.focusTime += now - this.metrics.lastActivity
-    } else if (visible && !this.isVisible) {
-      this.metrics.lastActivity = now
-    }
-    
-    this.isVisible = visible
-  }
+	const updateVisibility = (visible: boolean) => {
+		const now = Date.now();
 
-  markActive() {
-    if (!this.isActive && this.isVisible) {
-      const now = Date.now()
-      this.metrics.idleTime += now - this.metrics.lastActivity
-      this.metrics.lastActivity = now
-    }
-    this.isActive = true
-  }
+		if (!visible && isVisible && isActive) {
+			metrics.focusTime += now - metrics.lastActivity;
+		} else if (visible && !isVisible) {
+			metrics.lastActivity = now;
+		}
 
-  markIdle() {
-    if (this.isActive && this.isVisible) {
-      const now = Date.now()
-      this.metrics.focusTime += now - this.metrics.lastActivity
-      this.metrics.lastActivity = now
-    }
-    this.isActive = false
-  }
+		isVisible = visible;
+	};
 
-  updateActivity() {
-    if (this.isVisible && this.isActive) {
-      this.metrics.lastActivity = Date.now()
-    }
-  }
+	const markActive = () => {
+		if (!isActive && isVisible) {
+			const now = Date.now();
+			metrics.idleTime += now - metrics.lastActivity;
+			metrics.lastActivity = now;
+		}
+		isActive = true;
+	};
 
-  finalize() {
-    const now = Date.now()
-    if (this.isVisible && this.isActive) {
-      this.metrics.focusTime += now - this.metrics.lastActivity
-    }
-  }
+	const markIdle = () => {
+		if (isActive && isVisible) {
+			const now = Date.now();
+			metrics.focusTime += now - metrics.lastActivity;
+			metrics.lastActivity = now;
+		}
+		isActive = false;
+	};
 
-  getMetrics(): TimeMetrics {
-    return { ...this.metrics }
-  }
+	const updateActivity = () => {
+		if (isVisible && isActive) {
+			metrics.lastActivity = Date.now();
+		}
+	};
+
+	const finalize = () => {
+		const now = Date.now();
+		if (isVisible && isActive) {
+			metrics.focusTime += now - metrics.lastActivity;
+		}
+	};
+
+	const getMetrics = (): TimeMetrics => {
+		return { ...metrics };
+	};
+
+	return {
+		updateVisibility,
+		markActive,
+		markIdle,
+		updateActivity,
+		finalize,
+		getMetrics,
+	};
 }

@@ -1,61 +1,66 @@
-export class NavigationHandler {
-  private currentUrl: string
-  private onNavigationCallback: () => void
-  private observer: MutationObserver
+export interface NavigationHandlerInstance {
+	destroy: () => void;
+}
 
-  constructor(onNavigation: () => void) {
-    this.currentUrl = window.location.href
-    this.onNavigationCallback = onNavigation
-    this.observer = this.createObserver()
-    this.init()
-  }
+export function createNavigationHandler(
+	onNavigation: () => void,
+): NavigationHandlerInstance {
+	let currentUrl = window.location.href;
 
-  private init() {
-    this.setupEventListeners()
-    this.observer.observe(document, { childList: true, subtree: true })
-  }
+	const checkUrlChange = () => {
+		if (window.location.href !== currentUrl) {
+			currentUrl = window.location.href;
+			onNavigation();
+		}
+	};
 
-  private createObserver(): MutationObserver {
-    return new MutationObserver(() => {
-      if (document.readyState === 'complete') {
-        this.checkUrlChange()
-      }
-    })
-  }
+	const handleUrlChange = () => {
+		checkUrlChange();
+	};
 
-  private setupEventListeners() {
-    window.addEventListener('popstate', this.handleUrlChange)
-    this.interceptHistoryMethods()
-  }
+	const createObserver = (): MutationObserver => {
+		return new MutationObserver(() => {
+			if (document.readyState === "complete") {
+				checkUrlChange();
+			}
+		});
+	};
 
-  private interceptHistoryMethods() {
-    const originalPushState = history.pushState
-    const originalReplaceState = history.replaceState
+	const interceptHistoryMethods = () => {
+		const originalPushState = history.pushState;
+		const originalReplaceState = history.replaceState;
 
-    history.pushState = (...args) => {
-      originalPushState.apply(history, args)
-      setTimeout(() => this.handleUrlChange(), 0)
-    }
+		history.pushState = (...args) => {
+			originalPushState.apply(history, args);
+			setTimeout(() => handleUrlChange(), 0);
+		};
 
-    history.replaceState = (...args) => {
-      originalReplaceState.apply(history, args)
-      setTimeout(() => this.handleUrlChange(), 0)
-    }
-  }
+		history.replaceState = (...args) => {
+			originalReplaceState.apply(history, args);
+			setTimeout(() => handleUrlChange(), 0);
+		};
+	};
 
-  private handleUrlChange = () => {
-    this.checkUrlChange()
-  }
+	const setupEventListeners = () => {
+		window.addEventListener("popstate", handleUrlChange);
+		interceptHistoryMethods();
+	};
 
-  private checkUrlChange() {
-    if (window.location.href !== this.currentUrl) {
-      this.currentUrl = window.location.href
-      this.onNavigationCallback()
-    }
-  }
+	const observer = createObserver();
 
-  destroy() {
-    window.removeEventListener('popstate', this.handleUrlChange)
-    this.observer.disconnect()
-  }
+	const init = () => {
+		setupEventListeners();
+		observer.observe(document, { childList: true, subtree: true });
+	};
+
+	const destroy = () => {
+		window.removeEventListener("popstate", handleUrlChange);
+		observer.disconnect();
+	};
+
+	init();
+
+	return {
+		destroy,
+	};
 }

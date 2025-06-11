@@ -1,60 +1,61 @@
-export class VisibilityTracker {
-  private isVisible = true
-  private callbacks = {
-    onVisible: () => {},
-    onHidden: () => {}
-  }
+export interface VisibilityTrackerInstance {
+	getIsVisible: () => boolean;
+	destroy: () => void;
+}
 
-  constructor(onVisible: () => void, onHidden: () => void) {
-    this.callbacks.onVisible = onVisible
-    this.callbacks.onHidden = onHidden
-    this.init()
-  }
+export function createVisibilityTracker(
+	onVisible: () => void,
+	onHidden: () => void,
+): VisibilityTrackerInstance {
+	let isVisible = true;
 
-  private init() {
-    this.attachEventListeners()
-  }
+	const setVisible = (visible: boolean) => {
+		if (isVisible === visible) return;
 
-  private attachEventListeners() {
-    document.addEventListener('visibilitychange', this.handleVisibilityChange)
-    window.addEventListener('focus', this.handleFocus)
-    window.addEventListener('blur', this.handleBlur)
-  }
+		isVisible = visible;
+		if (visible) {
+			onVisible();
+		} else {
+			onHidden();
+		}
+	};
 
-  private handleVisibilityChange = () => {
-    if (document.hidden) {
-      this.setVisible(false)
-    } else {
-      this.setVisible(true)
-    }
-  }
+	const handleVisibilityChange = () => {
+		if (document.hidden) {
+			setVisible(false);
+		} else {
+			setVisible(true);
+		}
+	};
 
-  private handleFocus = () => {
-    this.setVisible(true)
-  }
+	const handleFocus = () => {
+		setVisible(true);
+	};
 
-  private handleBlur = () => {
-    this.setVisible(false)
-  }
+	const handleBlur = () => {
+		setVisible(false);
+	};
 
-  private setVisible(visible: boolean) {
-    if (this.isVisible === visible) return
-    
-    this.isVisible = visible
-    if (visible) {
-      this.callbacks.onVisible()
-    } else {
-      this.callbacks.onHidden()
-    }
-  }
+	const attachEventListeners = () => {
+		document.addEventListener("visibilitychange", handleVisibilityChange);
+		window.addEventListener("focus", handleFocus);
+		window.addEventListener("blur", handleBlur);
+	};
 
-  getIsVisible(): boolean {
-    return this.isVisible
-  }
+	const getIsVisible = (): boolean => {
+		return isVisible;
+	};
 
-  destroy() {
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange)
-    window.removeEventListener('focus', this.handleFocus)
-    window.removeEventListener('blur', this.handleBlur)
-  }
+	const destroy = () => {
+		document.removeEventListener("visibilitychange", handleVisibilityChange);
+		window.removeEventListener("focus", handleFocus);
+		window.removeEventListener("blur", handleBlur);
+	};
+
+	attachEventListeners();
+
+	return {
+		getIsVisible,
+		destroy,
+	};
 }

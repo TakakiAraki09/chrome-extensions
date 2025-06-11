@@ -1,71 +1,58 @@
-export class IdleTracker {
-  private idleTimer?: number
-  private idleThreshold: number
-  private onIdleCallback: () => void
-  private onActiveCallback: () => void
+export interface IdleTrackerInstance {
+	destroy: () => void;
+}
 
-  constructor(
-    idleThreshold: number,
-    onIdle: () => void,
-    onActive: () => void
-  ) {
-    this.idleThreshold = idleThreshold
-    this.onIdleCallback = onIdle
-    this.onActiveCallback = onActive
-    this.init()
-  }
+export function createIdleTracker(
+	idleThreshold: number,
+	onIdle: () => void,
+	onActive: () => void,
+): IdleTrackerInstance {
+	let idleTimer: number | undefined;
 
-  private init() {
-    this.attachEventListeners()
-    this.resetIdleTimer()
-  }
+	const events = [
+		"mousedown",
+		"mousemove",
+		"keypress",
+		"scroll",
+		"touchstart",
+		"click",
+	];
 
-  private attachEventListeners() {
-    const events = [
-      'mousedown',
-      'mousemove',
-      'keypress',
-      'scroll',
-      'touchstart',
-      'click'
-    ]
-    
-    events.forEach(event => {
-      document.addEventListener(event, this.handleActivity, { passive: true })
-    })
-  }
+	const handleActivity = () => {
+		onActive();
+		resetIdleTimer();
+	};
 
-  private handleActivity = () => {
-    this.onActiveCallback()
-    this.resetIdleTimer()
-  }
+	const resetIdleTimer = () => {
+		if (idleTimer) {
+			clearTimeout(idleTimer);
+		}
 
-  private resetIdleTimer() {
-    if (this.idleTimer) {
-      clearTimeout(this.idleTimer)
-    }
-    
-    this.idleTimer = window.setTimeout(() => {
-      this.onIdleCallback()
-    }, this.idleThreshold)
-  }
+		idleTimer = window.setTimeout(() => {
+			onIdle();
+		}, idleThreshold);
+	};
 
-  destroy() {
-    if (this.idleTimer) {
-      clearTimeout(this.idleTimer)
-    }
-    
-    const events = [
-      'mousedown',
-      'mousemove',
-      'keypress',
-      'scroll',
-      'touchstart',
-      'click'
-    ]
-    
-    events.forEach(event => {
-      document.removeEventListener(event, this.handleActivity)
-    })
-  }
+	const attachEventListeners = () => {
+		for (const event of events) {
+			document.addEventListener(event, handleActivity, { passive: true });
+		}
+	};
+
+	const destroy = () => {
+		if (idleTimer) {
+			clearTimeout(idleTimer);
+		}
+
+		for (const event of events) {
+			document.removeEventListener(event, handleActivity);
+		}
+	};
+
+	attachEventListeners();
+	resetIdleTimer();
+
+	return {
+		destroy,
+	};
 }

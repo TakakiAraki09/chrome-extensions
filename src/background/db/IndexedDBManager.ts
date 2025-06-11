@@ -1,154 +1,108 @@
-import { BrowsingActivity, InterestScore } from '../types'
+import Dexie, { type Table } from "dexie";
+import type { BrowsingActivity, InterestScore } from "../types";
 
 export interface DatabaseSchema {
-  browsingActivities: BrowsingActivity & { id?: number }
-  interestScores: InterestScore & { id?: number }
+	browsingActivities: BrowsingActivity & { id?: number };
+	interestScores: InterestScore & { id?: number };
 }
 
 export interface QueryOptions {
-  domain?: string
-  startTime?: number
-  endTime?: number
-  limit?: number
+	domain?: string;
+	startTime?: number;
+	endTime?: number;
+	limit?: number;
 }
 
-export class IndexedDBManager {
-  private dbName = 'BrowsingTracker'
-  private version = 1
-  private db: IDBDatabase | null = null
+class BrowsingTrackerDB extends Dexie {
+	browsingActivities!: Table<BrowsingActivity & { id?: number }>;
+	interestScores!: Table<InterestScore & { id?: number }>;
 
-  async init(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, this.version)
-      
-      request.onerror = () => reject(request.error)
-      request.onsuccess = () => {
-        this.db = request.result
-        resolve()
-      }
-      
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result
-        this.createStores(db)
-      }
-    })
-  }
+	constructor() {
+		super("BrowsingTracker");
+		this.version(1).stores({
+			browsingActivities: "++id, domain, url, startTime",
+			interestScores: "++id, domain, score",
+		});
+	}
+}
 
-  private createStores(db: IDBDatabase): void {
-    if (!db.objectStoreNames.contains('browsingActivities')) {
-      const activityStore = db.createObjectStore('browsingActivities', { 
-        keyPath: 'id', 
-        autoIncrement: true 
-      })
-      activityStore.createIndex('domain', 'domain', { unique: false })
-      activityStore.createIndex('url', 'url', { unique: false })
-      activityStore.createIndex('startTime', 'startTime', { unique: false })
-    }
-    
-    if (!db.objectStoreNames.contains('interestScores')) {
-      const scoreStore = db.createObjectStore('interestScores', { 
-        keyPath: 'id', 
-        autoIncrement: true 
-      })
-      scoreStore.createIndex('domain', 'domain', { unique: false })
-      scoreStore.createIndex('score', 'score', { unique: false })
-    }
-  }
+export interface IndexedDBManagerInstance {
+	init: () => Promise<void>;
+	saveBrowsingActivity: (activity: BrowsingActivity) => Promise<number>;
+	updateInterestScore: (score: InterestScore) => Promise<void>;
+	getBrowsingActivities: (
+		options?: QueryOptions,
+	) => Promise<BrowsingActivity[]>;
+	getInterestScores: () => Promise<InterestScore[]>;
+}
 
-  async saveBrowsingActivity(activity: BrowsingActivity): Promise<number> {
-    if (!this.db) throw new Error('Database not initialized')
-    
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(['browsingActivities'], 'readwrite')
-      const store = transaction.objectStore('browsingActivities')
-      const request = store.add(activity)
-      
-      request.onsuccess = () => resolve(request.result as number)
-      request.onerror = () => reject(request.error)
-    })
-  }
+export function createIndexedDBManager(): IndexedDBManagerInstance {
+	const db = new BrowsingTrackerDB();
 
-  async updateInterestScore(score: InterestScore): Promise<void> {
-    if (!this.db) throw new Error('Database not initialized')
-    
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(['interestScores'], 'readwrite')
-      const store = transaction.objectStore('interestScores')
-      const index = store.index('domain')
-      const request = index.get(score.domain)
-      
-      request.onsuccess = () => {
-        const existing = request.result
-        if (existing) {
-          const updateRequest = store.put({ ...score, id: existing.id })
-          updateRequest.onsuccess = () => resolve()
-          updateRequest.onerror = () => reject(updateRequest.error)
-        } else {
-          const addRequest = store.add(score)
-          addRequest.onsuccess = () => resolve()
-          addRequest.onerror = () => reject(addRequest.error)
-        }
-      }
-      
-      request.onerror = () => reject(request.error)
-    })
-  }
+	const init = async (): Promise<void> => {
+		await db.open();
+	};
 
-  async getBrowsingActivities(options: QueryOptions = {}): Promise<BrowsingActivity[]> {
-    if (!this.db) throw new Error('Database not initialized')
-    
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(['browsingActivities'], 'readonly')
-      const store = transaction.objectStore('browsingActivities')
-      
-      let request: IDBRequest
-      
-      if (options.domain) {
-        const index = store.index('domain')
-        request = index.getAll(options.domain)
-      } else {
-        request = store.getAll()
-      }
-      
-      request.onsuccess = () => {
-        let results = request.result as BrowsingActivity[]
-        
-        if (options.startTime || options.endTime) {
-          results = results.filter(activity => {
-            if (options.startTime && activity.startTime < options.startTime) return false
-            if (options.endTime && activity.startTime > options.endTime) return false
-            return true
-          })
-        }
-        
-        results.sort((a, b) => b.startTime - a.startTime)
-        
-        if (options.limit) {
-          results = results.slice(0, options.limit)
-        }
-        
-        resolve(results)
-      }
-      
-      request.onerror = () => reject(request.error)
-    })
-  }
+	const saveBrowsingActivity = async (
+		activity: BrowsingActivity,
+	): Promise<number> => {
+		return await db.browsingActivities.add(activity);
+	};
 
-  async getInterestScores(): Promise<InterestScore[]> {
-    if (!this.db) throw new Error('Database not initialized')
-    
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(['interestScores'], 'readonly')
-      const store = transaction.objectStore('interestScores')
-      const request = store.getAll()
-      
-      request.onsuccess = () => {
-        const results = request.result as InterestScore[]
-        results.sort((a, b) => b.score - a.score)
-        resolve(results)
-      }
-      
-      request.onerror = () => reject(request.error)
-    })
-  }
+	const updateInterestScore = async (score: InterestScore): Promise<void> => {
+		const existing = await db.interestScores
+			.where("domain")
+			.equals(score.domain)
+			.first();
+
+		if (existing) {
+			await db.interestScores.put({ ...score, id: existing.id });
+		} else {
+			await db.interestScores.add(score);
+		}
+	};
+
+	const getBrowsingActivities = async (
+		options: QueryOptions = {},
+	): Promise<BrowsingActivity[]> => {
+		let collection = db.browsingActivities.toCollection();
+
+		if (options.domain) {
+			collection = db.browsingActivities.where("domain").equals(options.domain);
+		}
+
+		let results = await collection.toArray();
+
+		if (options.startTime || options.endTime) {
+			results = results.filter((activity) => {
+				if (options.startTime && activity.startTime < options.startTime)
+					return false;
+				if (options.endTime && activity.startTime > options.endTime)
+					return false;
+				return true;
+			});
+		}
+
+		results.sort((a, b) => b.startTime - a.startTime);
+
+		if (options.limit) {
+			results = results.slice(0, options.limit);
+		}
+
+		return results;
+	};
+
+	const getInterestScores = async (): Promise<InterestScore[]> => {
+		const results = await db.interestScores.toArray();
+		results.sort((a, b) => b.score - a.score);
+		return results;
+	};
+
+	return {
+		init,
+		saveBrowsingActivity,
+		updateInterestScore,
+		getBrowsingActivities,
+		getInterestScores,
+	};
 }

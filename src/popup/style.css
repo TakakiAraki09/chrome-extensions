@@ -1,346 +1,346 @@
 body {
-  margin: 0;
-  padding: 0;
-  width: 500px;
-  max-height: 600px;
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+	margin: 0;
+	padding: 0;
+	width: 500px;
+	max-height: 600px;
+	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
 }
 
 #app {
-  padding: 20px;
+	padding: 20px;
 }
 
 header {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 header h1 {
-  font-size: 20px;
-  margin: 0 0 15px 0;
-  color: #333;
+	font-size: 20px;
+	margin: 0 0 15px 0;
+	color: #333;
 }
 
 .tab-controls {
-  display: flex;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 15px;
+	display: flex;
+	background-color: white;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin-bottom: 15px;
 }
 
 .tab-controls button {
-  flex: 1;
-  background-color: transparent;
-  border: none;
-  padding: 12px;
-  font-size: 14px;
-  color: #666;
-  cursor: pointer;
-  border-radius: 0;
-  margin: 0;
-  transition: all 0.3s;
+	flex: 1;
+	background-color: transparent;
+	border: none;
+	padding: 12px;
+	font-size: 14px;
+	color: #666;
+	cursor: pointer;
+	border-radius: 0;
+	margin: 0;
+	transition: all 0.3s;
 }
 
 .tab-controls button:hover {
-  background-color: #f0f0f0;
+	background-color: #f0f0f0;
 }
 
 .tab-controls button.active {
-  background-color: #2196F3;
-  color: white;
+	background-color: #2196f3;
+	color: white;
 }
 
 .date-controls {
-  background-color: white;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+	background-color: white;
+	padding: 15px;
+	border-radius: 8px;
+	margin-bottom: 15px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .date-controls label {
-  display: block;
-  margin-bottom: 10px;
-  color: #666;
+	display: block;
+	margin-bottom: 10px;
+	color: #666;
 }
 
 .date-controls select,
 .date-controls input {
-  padding: 6px 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  margin-left: 8px;
+	padding: 6px 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	margin-left: 8px;
 }
 
 #customDateInputs {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #eee;
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px solid #eee;
 }
 
 #customDateInputs label {
-  display: inline-block;
-  margin-right: 15px;
+	display: inline-block;
+	margin-right: 15px;
 }
 
 button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  margin-top: 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+	background-color: #4caf50;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 14px;
+	margin-top: 10px;
+	cursor: pointer;
+	border-radius: 4px;
+	transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #45a049;
+	background-color: #45a049;
 }
 
 button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+	background-color: #ccc;
+	cursor: not-allowed;
 }
 
 main {
-  max-height: 400px;
-  overflow-y: auto;
+	max-height: 400px;
+	overflow-y: auto;
 }
 
 .loading {
-  text-align: center;
-  padding: 40px 0;
-  color: #666;
+	text-align: center;
+	padding: 40px 0;
+	color: #666;
 }
 
 .interest-scores h2,
 .browsing-activities h2,
 .history h2 {
-  font-size: 18px;
-  margin: 0 0 15px 0;
-  color: #333;
+	font-size: 18px;
+	margin: 0 0 15px 0;
+	color: #333;
 }
 
 .scores-list,
 .activities-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
 }
 
 .score-item {
-  background-color: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: box-shadow 0.2s;
+	background-color: white;
+	padding: 15px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: box-shadow 0.2s;
 }
 
 .score-item:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .score-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
 }
 
 .score-header h3 {
-  margin: 0;
-  font-size: 16px;
-  color: #333;
-  font-weight: 500;
+	margin: 0;
+	font-size: 16px;
+	color: #333;
+	font-weight: 500;
 }
 
 .score-badge {
-  background-color: #2196F3;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: bold;
+	background-color: #2196f3;
+	color: white;
+	padding: 4px 12px;
+	border-radius: 20px;
+	font-size: 14px;
+	font-weight: bold;
 }
 
 .score-details {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-bottom: 10px;
 }
 
 .factor {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 12px;
 }
 
 .factor span:first-child {
-  width: 80px;
-  color: #666;
+	width: 80px;
+	color: #666;
 }
 
 .factor span:last-child {
-  width: 35px;
-  text-align: right;
-  color: #333;
-  font-weight: 500;
+	width: 35px;
+	text-align: right;
+	color: #333;
+	font-weight: 500;
 }
 
 .progress-bar {
-  flex: 1;
-  height: 6px;
-  background-color: #e0e0e0;
-  border-radius: 3px;
-  overflow: hidden;
+	flex: 1;
+	height: 6px;
+	background-color: #e0e0e0;
+	border-radius: 3px;
+	overflow: hidden;
 }
 
 .progress-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.3s;
+	height: 100%;
+	border-radius: 3px;
+	transition: width 0.3s;
 }
 
 .progress-fill.time {
-  background-color: #4CAF50;
+	background-color: #4caf50;
 }
 
 .progress-fill.scroll {
-  background-color: #FF9800;
+	background-color: #ff9800;
 }
 
 .progress-fill.engagement {
-  background-color: #9C27B0;
+	background-color: #9c27b0;
 }
 
 .last-updated {
-  font-size: 11px;
-  color: #999;
-  margin: 0;
-  text-align: right;
+	font-size: 11px;
+	color: #999;
+	margin: 0;
+	text-align: right;
 }
 
 .activity-item {
-  background-color: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: box-shadow 0.2s;
+	background-color: white;
+	padding: 15px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: box-shadow 0.2s;
 }
 
 .activity-item:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .activity-item h3 {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  color: #333;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	margin: 0 0 8px 0;
+	font-size: 14px;
+	color: #333;
+	font-weight: 500;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .activity-item .url {
-  font-size: 12px;
-  color: #0066cc;
-  margin: 0 0 15px 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	font-size: 12px;
+	color: #0066cc;
+	margin: 0 0 15px 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .activity-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 15px;
-  margin-bottom: 10px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px 15px;
+	margin-bottom: 10px;
 }
 
 .stat {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
+	display: flex;
+	justify-content: space-between;
+	font-size: 12px;
 }
 
 .stat .label {
-  color: #666;
+	color: #666;
 }
 
 .stat .value {
-  color: #333;
-  font-weight: 500;
+	color: #333;
+	font-weight: 500;
 }
 
 .timestamp {
-  font-size: 11px;
-  color: #999;
-  margin: 0;
-  text-align: right;
+	font-size: 11px;
+	color: #999;
+	margin: 0;
+	text-align: right;
 }
 
 .summary {
-  font-weight: bold;
-  color: #666;
-  margin-bottom: 15px;
+	font-weight: bold;
+	color: #666;
+	margin-bottom: 15px;
 }
 
 .history-item {
-  background-color: white;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  transition: box-shadow 0.2s;
+	background-color: white;
+	padding: 12px;
+	margin-bottom: 10px;
+	border-radius: 6px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: box-shadow 0.2s;
 }
 
 .history-item:hover {
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .history-item h3 {
-  margin: 0 0 5px 0;
-  font-size: 14px;
-  color: #333;
-  font-weight: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	margin: 0 0 5px 0;
+	font-size: 14px;
+	color: #333;
+	font-weight: normal;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .history-item .url {
-  font-size: 12px;
-  color: #0066cc;
-  margin: 0 0 8px 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	font-size: 12px;
+	color: #0066cc;
+	margin: 0 0 8px 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .history-item .metadata {
-  font-size: 11px;
-  color: #999;
-  margin: 0;
+	font-size: 11px;
+	color: #999;
+	margin: 0;
 }
 
 .history-item .metadata span {
-  margin-right: 15px;
+	margin-right: 15px;
 }
 
 .error {
-  color: #d32f2f;
-  padding: 10px;
-  background-color: #ffebee;
-  border-radius: 4px;
+	color: #d32f2f;
+	padding: 10px;
+	background-color: #ffebee;
+	border-radius: 4px;
 }
