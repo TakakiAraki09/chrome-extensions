@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import "dayjs/locale/ja";
+import { DATE_CONSTANTS, UI_CONSTANTS } from "../shared/constants";
 import { BrowsingActivities } from "./components/BrowsingActivities";
 import { DateRangeSelector } from "./components/DateRangeSelector";
 import { History } from "./components/History";
@@ -16,13 +17,15 @@ dayjs.locale("ja");
 
 export const App: React.FC = () => {
 	const [viewMode, setViewMode] = useState<ViewMode>("interests");
-	const [dateRange, setDateRange] = useState("7");
+	const [dateRange, setDateRange] = useState<string>(
+		UI_CONSTANTS.DEFAULT_PERIOD_OPTION,
+	);
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
 
 	useEffect(() => {
 		const now = new Date();
-		const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+		const weekAgo = new Date(now.getTime() - DATE_CONSTANTS.WEEK_IN_MS);
 
 		setEndDate(formatDateTimeLocal(now));
 		setStartDate(formatDateTimeLocal(weekAgo));
@@ -38,7 +41,7 @@ export const App: React.FC = () => {
 
 		const days = Number.parseInt(dateRange);
 		return {
-			startTime: Date.now() - days * 24 * 60 * 60 * 1000,
+			startTime: Date.now() - days * DATE_CONSTANTS.DAY_IN_MS,
 			endTime: Date.now(),
 		};
 	}, [dateRange, startDate, endDate]);

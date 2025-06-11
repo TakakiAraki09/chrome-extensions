@@ -1,3 +1,4 @@
+import { INITIAL_VALUES, TIME_CONSTANTS } from "../shared/constants";
 import { sendMessage } from "../shared/messages";
 import { createIdleTracker } from "./trackers/IdleTracker";
 import { createScrollTracker } from "./trackers/ScrollTracker";
@@ -10,9 +11,6 @@ interface BrowsingTrackerInstance {
 }
 
 function createBrowsingTracker(): BrowsingTrackerInstance {
-	const IDLE_THRESHOLD = 30000; // 30 seconds
-	const SAVE_INTERVAL = 10000; // 10 seconds
-
 	let activity: BrowsingActivity = createInitialActivity();
 	let saveTimer: number | undefined;
 
@@ -40,7 +38,11 @@ function createBrowsingTracker(): BrowsingTrackerInstance {
 
 	const scrollTracker = createScrollTracker(onUserActivity);
 	const visibilityTracker = createVisibilityTracker(onVisible, onHidden);
-	const idleTracker = createIdleTracker(IDLE_THRESHOLD, onIdle, onActive);
+	const idleTracker = createIdleTracker(
+		TIME_CONSTANTS.IDLE_THRESHOLD,
+		onIdle,
+		onActive,
+	);
 
 	function createInitialActivity(): BrowsingActivity {
 		return {
@@ -48,11 +50,11 @@ function createBrowsingTracker(): BrowsingTrackerInstance {
 			title: document.title,
 			domain: window.location.hostname,
 			startTime: Date.now(),
-			scrollDepth: 0,
-			maxScrollDepth: 0,
-			totalScrollDistance: 0,
-			focusTime: 0,
-			idleTime: 0,
+			scrollDepth: INITIAL_VALUES.ZERO,
+			maxScrollDepth: INITIAL_VALUES.ZERO,
+			totalScrollDistance: INITIAL_VALUES.ZERO,
+			focusTime: INITIAL_VALUES.ZERO,
+			idleTime: INITIAL_VALUES.ZERO,
 		};
 	}
 
@@ -79,7 +81,7 @@ function createBrowsingTracker(): BrowsingTrackerInstance {
 	const startPeriodicSave = () => {
 		saveTimer = window.setInterval(() => {
 			saveCurrentActivity();
-		}, SAVE_INTERVAL);
+		}, TIME_CONSTANTS.SAVE_INTERVAL);
 	};
 
 	const destroy = () => {
@@ -142,7 +144,7 @@ function createTrackerManager(): TrackerManagerInstance {
 		document.body.style.backgroundColor = "#f0f0f0";
 		setTimeout(() => {
 			document.body.style.backgroundColor = originalColor;
-		}, 1000);
+		}, TIME_CONSTANTS.UI_FLASH_DURATION);
 	};
 
 	const setupEventListeners = () => {

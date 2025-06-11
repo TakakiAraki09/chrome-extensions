@@ -1,3 +1,4 @@
+import { INITIAL_VALUES, UI_CONSTANTS } from "../../shared/constants";
 import type { ScrollMetrics } from "../types";
 
 export interface ScrollTrackerInstance {
@@ -9,9 +10,9 @@ export function createScrollTracker(
 	onUpdate: () => void,
 ): ScrollTrackerInstance {
 	const metrics: ScrollMetrics = {
-		depth: 0,
-		maxDepth: 0,
-		totalDistance: 0,
+		depth: INITIAL_VALUES.ZERO,
+		maxDepth: INITIAL_VALUES.ZERO,
+		totalDistance: INITIAL_VALUES.ZERO,
 	};
 	let lastScrollY = window.scrollY;
 
@@ -26,8 +27,11 @@ export function createScrollTracker(
 		);
 
 		return Math.min(
-			100,
-			Math.round(((window.scrollY + windowHeight) / documentHeight) * 100),
+			UI_CONSTANTS.SCROLL_MAX_PERCENTAGE,
+			Math.round(
+				((window.scrollY + windowHeight) / documentHeight) *
+					UI_CONSTANTS.PERCENTAGE_MULTIPLIER,
+			),
 		);
 	};
 

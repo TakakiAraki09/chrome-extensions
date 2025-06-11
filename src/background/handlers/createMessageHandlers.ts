@@ -1,3 +1,8 @@
+import {
+	DATA_LIMITS,
+	DATE_CONSTANTS,
+	INITIAL_VALUES,
+} from "../../shared/constants";
 import type {
 	GetBrowsingDataRequest,
 	GetBrowsingDataResponse,
@@ -37,24 +42,31 @@ export const createMessageHandlers = (dbManager: IndexedDBManagerInstance) => ({
 			currentWindow: true,
 		});
 		return {
-			tab: tabs[0],
+			tab: tabs[INITIAL_VALUES.EMPTY_ARRAY_INDEX],
 		};
 	},
 
 	getHistory: async (
 		request: GetHistoryRequest,
 	): Promise<GetHistoryResponse> => {
-		const { startTime, endTime, maxResults = 100 } = request;
+		const {
+			startTime,
+			endTime,
+			maxResults = DATA_LIMITS.DEFAULT_HISTORY_LIMIT,
+		} = request;
 
 		const historyItems = await chrome.history.search({
 			text: "",
-			startTime: startTime || Date.now() - 7 * 24 * 60 * 60 * 1000,
+			startTime: startTime || Date.now() - DATE_CONSTANTS.WEEK_IN_MS,
 			endTime: endTime || Date.now(),
 			maxResults: maxResults,
 		});
 
 		const sortedHistory = historyItems.sort((a, b) => {
-			return (b.lastVisitTime || 0) - (a.lastVisitTime || 0);
+			return (
+				(b.lastVisitTime || INITIAL_VALUES.ZERO) -
+				(a.lastVisitTime || INITIAL_VALUES.ZERO)
+			);
 		});
 
 		return {
@@ -73,7 +85,7 @@ export const createMessageHandlers = (dbManager: IndexedDBManagerInstance) => ({
 
 			const domainActivities = await dbManager.getBrowsingActivities({
 				domain: activity.domain,
-				startTime: Date.now() - 7 * 24 * 60 * 60 * 1000, // Last 7 days
+				startTime: Date.now() - DATE_CONSTANTS.WEEK_IN_MS,
 			});
 
 			const interestScore = calculateInterestScore(domainActivities);

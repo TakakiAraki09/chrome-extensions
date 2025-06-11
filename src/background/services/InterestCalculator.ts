@@ -1,3 +1,4 @@
+import { INITIAL_VALUES, SCORE_CONSTANTS } from "../../shared/constants";
 import type { BrowsingActivity, InterestScore } from "../types";
 
 function calculateMetrics(activities: BrowsingActivity[]) {
@@ -25,8 +26,14 @@ function calculateMetrics(activities: BrowsingActivity[]) {
 
 function normalizeWeights(metrics: ReturnType<typeof calculateMetrics>) {
 	return {
-		timeWeight: Math.min(metrics.totalTime / (1000 * 60 * 5), 1), // Normalize to 5 minutes max
-		scrollWeight: Math.min(metrics.avgScrollDepth / 100, 1),
+		timeWeight: Math.min(
+			metrics.totalTime / SCORE_CONSTANTS.TIME_NORMALIZATION_MAX,
+			1,
+		),
+		scrollWeight: Math.min(
+			metrics.avgScrollDepth / SCORE_CONSTANTS.SCROLL_NORMALIZATION_MAX,
+			1,
+		),
 		engagementWeight: metrics.avgEngagement,
 	};
 }
@@ -35,11 +42,11 @@ function computeScore(weights: InterestScore["factors"]) {
 	const { timeWeight, scrollWeight, engagementWeight } = weights;
 
 	return (
-		(timeWeight * 0.3 +
-			scrollWeight * 0.2 +
-			engagementWeight * 0.3 +
-			Math.min(1, 0.2)) * // Simplified frequency weight
-		100
+		(timeWeight * SCORE_CONSTANTS.WEIGHTS.TIME +
+			scrollWeight * SCORE_CONSTANTS.WEIGHTS.SCROLL +
+			engagementWeight * SCORE_CONSTANTS.WEIGHTS.ENGAGEMENT +
+			Math.min(1, SCORE_CONSTANTS.WEIGHTS.FREQUENCY)) *
+		SCORE_CONSTANTS.SCORE_MULTIPLIER
 	);
 }
 

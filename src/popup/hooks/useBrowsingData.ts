@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { DATA_LIMITS } from "../../shared/constants";
 import { sendMessage } from "../../shared/messages";
 import type {
 	BrowsingActivity,
@@ -30,7 +31,7 @@ export const useBrowsingData = (viewMode: ViewMode, timeRange: TimeRange) => {
 					action: "getBrowsingData",
 					startTime: timeRange.startTime,
 					endTime: timeRange.endTime,
-					limit: 100,
+					limit: DATA_LIMITS.DEFAULT_ACTIVITY_LIMIT,
 				});
 				setBrowsingActivities(response.activities || []);
 			} else if (viewMode === "history") {
@@ -38,7 +39,7 @@ export const useBrowsingData = (viewMode: ViewMode, timeRange: TimeRange) => {
 					action: "getHistory",
 					startTime: timeRange.startTime,
 					endTime: timeRange.endTime,
-					maxResults: 2000,
+					maxResults: DATA_LIMITS.DEFAULT_HISTORY_LIMIT,
 				});
 				setHistoryItems(response.history || []);
 			}

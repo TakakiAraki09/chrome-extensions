@@ -1,3 +1,5 @@
+import { TIME_CONSTANTS } from "../../shared/constants";
+
 export interface NavigationHandlerInstance {
 	destroy: () => void;
 }
@@ -32,12 +34,12 @@ export function createNavigationHandler(
 
 		history.pushState = (...args) => {
 			originalPushState.apply(history, args);
-			setTimeout(() => handleUrlChange(), 0);
+			setTimeout(() => handleUrlChange(), TIME_CONSTANTS.NAVIGATION_DELAY);
 		};
 
 		history.replaceState = (...args) => {
 			originalReplaceState.apply(history, args);
-			setTimeout(() => handleUrlChange(), 0);
+			setTimeout(() => handleUrlChange(), TIME_CONSTANTS.NAVIGATION_DELAY);
 		};
 	};
 

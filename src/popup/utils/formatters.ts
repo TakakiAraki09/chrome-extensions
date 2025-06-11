@@ -1,19 +1,24 @@
 import dayjs from "dayjs";
+import { DATE_CONSTANTS, INITIAL_VALUES } from "../../shared/constants";
 
 export const formatDateTimeLocal = (date: Date): string => {
 	return dayjs(date).format("YYYY-MM-DDTHH:mm");
 };
 
 export const formatDuration = (milliseconds: number): string => {
-	const seconds = Math.floor(milliseconds / 1000);
-	const minutes = Math.floor(seconds / 60);
-	const hours = Math.floor(minutes / 60);
+	const seconds = Math.floor(milliseconds / DATE_CONSTANTS.SECOND_IN_MS);
+	const minutes = Math.floor(
+		seconds / (DATE_CONSTANTS.MINUTE_IN_MS / DATE_CONSTANTS.SECOND_IN_MS),
+	);
+	const hours = Math.floor(
+		minutes / (DATE_CONSTANTS.HOUR_IN_MS / DATE_CONSTANTS.MINUTE_IN_MS),
+	);
 
-	if (hours > 0) {
-		return `${hours}時間${minutes % 60}分`;
+	if (hours > INITIAL_VALUES.ZERO) {
+		return `${hours}時間${minutes % (DATE_CONSTANTS.HOUR_IN_MS / DATE_CONSTANTS.MINUTE_IN_MS)}分`;
 	}
-	if (minutes > 0) {
-		return `${minutes}分${seconds % 60}秒`;
+	if (minutes > INITIAL_VALUES.ZERO) {
+		return `${minutes}分${seconds % (DATE_CONSTANTS.MINUTE_IN_MS / DATE_CONSTANTS.SECOND_IN_MS)}秒`;
 	}
 	return `${seconds}秒`;
 };

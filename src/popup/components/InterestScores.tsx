@@ -1,4 +1,5 @@
 import type React from "react";
+import { UI_CONSTANTS } from "../../shared/constants";
 import type { InterestScore } from "../types";
 import { formatDate } from "../utils/formatters";
 
@@ -23,11 +24,11 @@ const ScoreFactor: React.FC<ScoreFactorProps> = ({
 			<div
 				className={`progress-fill ${className}`}
 				style={{
-					width: `${weight * 100}%`,
+					width: `${weight * UI_CONSTANTS.PERCENTAGE_MULTIPLIER}%`,
 				}}
 			/>
 		</div>
-		<span>{Math.round(weight * 100)}%</span>
+		<span>{Math.round(weight * UI_CONSTANTS.PERCENTAGE_MULTIPLIER)}%</span>
 	</div>
 );
 

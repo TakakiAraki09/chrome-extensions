@@ -1,4 +1,5 @@
 import type React from "react";
+import { UI_CONSTANTS } from "../../shared/constants";
 
 interface DateRangeSelectorProps {
 	dateRange: string;
@@ -13,15 +14,15 @@ interface DateRangeSelectorProps {
 
 const dateRangeOptions = [
 	{
-		value: "1",
+		value: String(UI_CONSTANTS.PERIOD_OPTIONS.ONE_DAY),
 		label: "Last 24 hours",
 	},
 	{
-		value: "7",
+		value: String(UI_CONSTANTS.PERIOD_OPTIONS.ONE_WEEK),
 		label: "Last 7 days",
 	},
 	{
-		value: "30",
+		value: String(UI_CONSTANTS.PERIOD_OPTIONS.ONE_MONTH),
 		label: "Last 30 days",
 	},
 	{

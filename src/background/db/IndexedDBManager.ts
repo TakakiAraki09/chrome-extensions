@@ -1,4 +1,5 @@
 import Dexie, { type Table } from "dexie";
+import { INITIAL_VALUES, UI_CONSTANTS } from "../../shared/constants";
 import type { BrowsingActivity, InterestScore } from "../types";
 
 export interface DatabaseSchema {
@@ -31,7 +32,7 @@ class BrowsingTrackerDB extends Dexie {
 
 	constructor() {
 		super("BrowsingTracker");
-		this.version(1).stores({
+		this.version(UI_CONSTANTS.DB_VERSION).stores({
 			browsingActivities: "++id, domain, url, startTime",
 			interestScores: "++id, domain, score",
 		});
@@ -101,7 +102,7 @@ export function createIndexedDBManager(): IndexedDBManagerInstance {
 		results.sort((a, b) => b.startTime - a.startTime);
 
 		if (options.limit) {
-			results = results.slice(0, options.limit);
+			results = results.slice(INITIAL_VALUES.EMPTY_ARRAY_INDEX, options.limit);
 		}
 
 		return results;
